@@ -37,4 +37,12 @@ Contract deployed to :-  0x9a97DAAe33a96492e461F40ee2e6d64ba5f95490
 Attempting to deploy from account 0x986AFFe5EF54151FE093Ee2C51FA163f6b1Ef508
 [{"constant":true,"inputs":[],"name":"getDeployedCampaigns","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"deployedContracts","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"minimum","type":"uint256"}],"name":"createCampaign","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
 Contract deployed to :-  0xAfbb5ADCFa0D8468Fa9CD19037CcC7440D4AD8fA
+
+Attempting to deploy from account 0x986AFFe5EF54151FE093Ee2C51FA163f6b1Ef508
+[{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isUserExsits","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getDeployedCampaigns","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"deployedContracts","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"minimum","type":"uint256"}],"name":"createCampaign","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+Contract deployed to :-  0xb40526E1D899f87fC1e287578b9aeE28a582F667
+
+Attempting to deploy from account 0x986AFFe5EF54151FE093Ee2C51FA163f6b1Ef508
+[{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isUserExsits","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getDeployedCampaigns","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"deployedContracts","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"minimum","type":"uint256"}],"name":"createCampaign","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+Contract deployed to :-  0xA3f36333549356234696d4332BdF27EA07576d75
 */

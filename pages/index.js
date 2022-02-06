@@ -23,11 +23,12 @@ class CampaignIndex extends React.Component{
 
     // created-[1] this function is created using semantic ui library to display the campaigns
     // the below code for the card is taken from the semantic-ui docs they have good docs have a look
+    //address here is nothing but the place where that address is placed.
     renderCampaigns(){
         const items = this.props.campaigns.map(address =>{
             return{
                 header: address,
-                description: <Link route={`/campaigns/${address}`}><a>View Campaign</a></Link>,
+                description: <Link route={`/campaigns/${address}`}><a>View Organization</a></Link>,
                 fluid: true
             };
         });
@@ -47,13 +48,13 @@ class CampaignIndex extends React.Component{
             <Layout>
 
                 <div>
-                    <h3>Open Campaigns</h3>
+                    <h3>Organizations</h3>
 
                     {/*This button code is again taken from semantic ui documentation  */}
                     <Link route="/campaigns/new">
                         <a>
                             <Button 
-                                content="Create Campaign"
+                                content="Create Organization"
                                 icon="add circle"
                                 primary
                                 labelPosition="left"

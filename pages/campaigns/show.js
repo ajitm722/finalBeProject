@@ -92,7 +92,7 @@ class CampaignShow extends React.Component{
     render(){
         return (
             <Layout>
-                <h2>Campaign</h2>
+                <h2>Organization</h2>
 
                 <Grid>
                     <Grid.Row>
@@ -112,7 +112,7 @@ class CampaignShow extends React.Component{
                         <Grid.Column>
                             <Link route={`/campaigns/${this.props.address}/requests`}>
                                     <a>
-                                        <Button primary>View Requests</Button>
+                                        <Button primary>View News</Button>
                                     </a>
                                 </Link>
                         </Grid.Column>

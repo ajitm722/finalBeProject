@@ -13,10 +13,12 @@ class RequestIndex extends Component{
         console.log(address);
         const campaign = Campaign(address);
 
+        //total number of news
         const requestCount = await campaign.methods.getRequestCount().call();
         console.log(requestCount);
 
         var myrequests = [];
+       
         for(var i=0; i<requestCount; i++){
             const currReq = await campaign.methods.requests(i).call();
             myrequests.push(currReq);
@@ -33,11 +35,11 @@ class RequestIndex extends Component{
         // const first = await campaign.methods.requests(1).call();
         // console.log(first);
         // // getting the total number of approvers for the approval count column in request row
-        const approversCount = await campaign.methods.approversCount().call();
+        const totalApproversCount = await campaign.methods.approversCount().call();
         // console.log(approversCount);
         // console.log(request);
         // return { address, requests, requestCount, approversCount };
-        return { address, requestCount, myrequests, approversCount };
+        return { address, requestCount, myrequests, totalApproversCount };
     }
 
     //used to render row for each request
@@ -49,7 +51,7 @@ class RequestIndex extends Component{
                     request={request}
                     address={this.props.address}
                     id={index}
-                    approversCount={this.props.approversCount}
+                    totalApproversCount={this.props.totalApproversCount}
                 />
             );
         });
@@ -73,9 +75,9 @@ class RequestIndex extends Component{
                             <Table.HeaderCell>Description</Table.HeaderCell>
                             <Table.HeaderCell>Amount</Table.HeaderCell>
                             <Table.HeaderCell>Recipient</Table.HeaderCell>
-                            <Table.HeaderCell>Approval Count</Table.HeaderCell>
+                            <Table.HeaderCell>Voted/Total</Table.HeaderCell>
                             <Table.HeaderCell>Approve</Table.HeaderCell>
-                            <Table.HeaderCell>Finalize</Table.HeaderCell>
+                            <Table.HeaderCell>Disapprove</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
 

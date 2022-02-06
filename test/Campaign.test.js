@@ -40,7 +40,7 @@ describe('Campaign', ()=>{
         assert.ok(campaign.options.address);
     });
     
-    //test for checking manager the person who created the campaign
+    // test for checking manager the person who created the campaign
     it('manager test', async ()=>{
         const manager = await campaign.methods.manager().call();
         assert.equal(accounts[0], manager);
@@ -122,4 +122,189 @@ describe('Campaign', ()=>{
         assert(balance>104);
 
     });
+
+    //end to end test contribute to campaign create a request approve the request send money to the recipient
+    it('end to end news approve', async()=>{
+        //contribute money to campaign and becoming a member
+        await campaign.methods.contribute().send({
+            from: accounts[1],
+            value: web3.utils.toWei('1', 'ether')
+        });
+        await campaign.methods.contribute().send({
+            from: accounts[2],
+            value: web3.utils.toWei('1', 'ether')
+        });
+        await campaign.methods.contribute().send({
+            from: accounts[3],
+            value: web3.utils.toWei('1', 'ether')
+        });
+
+        //create request a.k.a creating a news by campaign manager
+        await campaign.methods.createRequest('news 1', web3.utils.toWei('1','ether'), accounts[0]).send({
+            from: accounts[0],
+            gas: '1000000'
+        });
+
+        // //vote for the request by approvers 2 people approve
+        await campaign.methods.approveRequest(0).send({
+            from: accounts[1],
+            gas:'1000000'
+        });
+        await campaign.methods.approveRequest(0).send({
+            from: accounts[2],
+            gas:'1000000'
+        });
+
+        var complete = await campaign.methods.requests(0).call();
+        // console.log(complete);
+        
+        
+    });
+
+    //end to end test contribute to campaign create a request approve the request send money to the recipient
+    it('end to end news disapprove', async()=>{
+        //contribute money to campaign and becoming a member
+        await campaign.methods.contribute().send({
+            from: accounts[1],
+            value: web3.utils.toWei('1', 'ether')
+        });
+        await campaign.methods.contribute().send({
+            from: accounts[2],
+            value: web3.utils.toWei('1', 'ether')
+        });
+        await campaign.methods.contribute().send({
+            from: accounts[3],
+            value: web3.utils.toWei('1', 'ether')
+        });
+        await campaign.methods.contribute().send({
+            from: accounts[4],
+            value: web3.utils.toWei('1', 'ether')
+        });
+        await campaign.methods.contribute().send({
+            from: accounts[5],
+            value: web3.utils.toWei('1', 'ether')
+        });
+
+        //create request a.k.a creating a news by campaign manager
+        await campaign.methods.createRequest('news 1', web3.utils.toWei('1','ether'), accounts[0]).send({
+            from: accounts[0],
+            gas: '1000000'
+        });
+
+        // //vote for the request by approvers 2 people approve
+        await campaign.methods.disapproveRequest(0).send({
+            from: accounts[1],
+            gas:'1000000'
+        });
+        await campaign.methods.disapproveRequest(0).send({
+            from: accounts[2],
+            gas:'1000000'
+        });
+        await campaign.methods.approveRequest(0).send({
+            from: accounts[3],
+            gas:'1000000'
+        });
+        await campaign.methods.disapproveRequest(0).send({
+            from: accounts[4],
+            gas:'1000000'
+        });
+
+        var complete = await campaign.methods.requests(0).call();
+        console.log(complete);
+        
+        
+    });
+     
+    //end to end test contribute to campaign create a request approve the request send money to the recipient
+    // it('end to end 2 news one true and one false', async(done)=>{
+    //     //contribute money to campaign and becoming a member
+    //     await campaign.methods.contribute().send({
+    //         from: accounts[1],
+    //         value: web3.utils.toWei('1', 'ether')
+    //     });
+    //     await campaign.methods.contribute().send({
+    //         from: accounts[2],
+    //         value: web3.utils.toWei('1', 'ether')
+    //     });
+    //     await campaign.methods.contribute().send({
+    //         from: accounts[3],
+    //         value: web3.utils.toWei('1', 'ether')
+    //     });
+    //     await campaign.methods.contribute().send({
+    //         from: accounts[4],
+    //         value: web3.utils.toWei('1', 'ether')
+    //     });
+    //     await campaign.methods.contribute().send({
+    //         from: accounts[5],
+    //         value: web3.utils.toWei('1', 'ether')
+    //     });
+
+    //     //create request a.k.a creating a news by campaign manager
+    //     await campaign.methods.createRequest('news 1', web3.utils.toWei('1','ether'), accounts[0]).send({
+    //         from: accounts[0],
+    //         gas: '1000000'
+    //     });
+    //     await campaign.methods.createRequest('news 2', web3.utils.toWei('1','ether'), accounts[0]).send({
+    //         from: accounts[0],
+    //         gas: '1000000'
+    //     });
+
+    //     var news1 = await campaign.methods.requests(0).call();
+    //     var news2 = await campaign.methods.requests(1).call();
+    //     console.log(news1);
+    //     console.log(news2);
+
+    //     try{
+    //         var succ, err = await campaign.methods.disapproveRequest(1).send({
+    //             from: accounts[2],
+    //             gas:'1000000'
+    //         });
+    //         console.log(succ);
+    //         console.log(err);
+    //     }catch(done){
+    //         assert(done)
+    //     }
+    //     // FOR NEWS 1
+    //     //vote for the request by approvers 2 people approve
+    //     // await campaign.methods.approveRequest(0).send({
+    //     //     from: accounts[1],
+    //     //     gas:'1000000'
+    //     // });
+    //     // await campaign.methods.disapproveRequest(0).send({
+    //     //     from: accounts[2],
+    //     //     gas:'1000000'
+    //     // });
+    //     // await campaign.methods.approveRequest(0).send({
+    //     //     from: accounts[3],
+    //     //     gas:'1000000'
+    //     // });
+    //     // await campaign.methods.disapproveRequest(0).send({
+    //     //     from: accounts[4],
+    //     //     gas:'1000000'
+    //     // });
+    //     // await campaign.methods.approveRequest(0).send({
+    //     //     from: accounts[5],
+    //     //     gas:'1000000'
+    //     // });
+
+    //     // var complete = await campaign.methods.requests(0).call();
+    //     // console.log(complete);
+        
+    //     // await campaign.methods.disapproveRequest(0).send({
+    //     //     from: accounts[1],
+    //     //     gas:'1000000'
+    //     // });
+    //     // await campaign.methods.disapproveRequest(0).send({
+    //     //     from: accounts[2],
+    //     //     gas:'1000000'
+    //     // });
+    //     // await campaign.methods.disapproveRequest(0).send({
+    //     //     from: accounts[3],
+    //     //     gas:'1000000'
+    //     // });
+    //     // var complete = await campaign.methods.requests(1).call();
+    //     // console.log(complete);
+    // });
+
+
 });
