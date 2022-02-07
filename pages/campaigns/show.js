@@ -21,8 +21,12 @@ class CampaignShow extends React.Component{
         const campaign = Campaign(props.query.address);
 
         const summary = await campaign.methods.getSummary().call();
+        const title = await campaign.methods.orgName().call();
+        const reputationScore = await campaign.methods.reputationScore().call();
+        const totalApproversCount = await campaign.methods.approversCount().call();
 
-        // console.log(summary);
+        console.log(totalApproversCount)
+        console.log(reputationScore);
 
         return {
             minimumContribution: summary[0],
@@ -30,7 +34,9 @@ class CampaignShow extends React.Component{
             requestCount: summary[2],
             approversCount: summary[3],
             manager: summary[4],
-            address: props.query.address
+            address: props.query.address,
+            orgName: title,
+            reputationScore: reputationScore
         };
     }
 
@@ -41,7 +47,9 @@ class CampaignShow extends React.Component{
             manager, 
             minimumContribution, 
             requestCount, 
-            approversCount
+            approversCount,
+            title,
+            reputationScore
         } = this.props;
 
         const items = [
@@ -84,6 +92,14 @@ class CampaignShow extends React.Component{
                 style:{
                     overflowWrap:'break-word'
                 }
+            },
+            {
+                header: reputationScore,
+                meta:'reputation score',
+                description:'reputation score is based on your frequency of news Truthfullness',
+                style:{
+                    overflowWrap:'break-word'
+                }
             }
         ];
         return <Card.Group items={items} />;
@@ -92,7 +108,7 @@ class CampaignShow extends React.Component{
     render(){
         return (
             <Layout>
-                <h2>Organization</h2>
+                <h2>{this.props.orgName}</h2>
 
                 <Grid>
                     <Grid.Row>

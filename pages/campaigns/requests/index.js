@@ -52,6 +52,7 @@ class RequestIndex extends Component{
                     address={this.props.address}
                     id={index}
                     totalApproversCount={this.props.totalApproversCount}
+                    newsTitle = {this.props.newsTitle}
                 />
             );
         });
@@ -72,9 +73,8 @@ class RequestIndex extends Component{
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>ID</Table.HeaderCell>
+                            <Table.HeaderCell>News Title</Table.HeaderCell>
                             <Table.HeaderCell>Description</Table.HeaderCell>
-                            <Table.HeaderCell>Amount</Table.HeaderCell>
-                            <Table.HeaderCell>Recipient</Table.HeaderCell>
                             <Table.HeaderCell>Voted/Total</Table.HeaderCell>
                             <Table.HeaderCell>Approve</Table.HeaderCell>
                             <Table.HeaderCell>Disapprove</Table.HeaderCell>

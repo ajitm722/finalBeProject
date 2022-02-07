@@ -25,7 +25,8 @@ class CampaignNew extends Component{
         // error message is used when the used enters some invalid input in the text box or anything wrong
         errorMessage:'',
         // this is used to show the user that the transaction is processing 
-        loading: false
+        loading: false,
+        title: ""
     };
 
     //this onSubmit is used when the form will be submitted
@@ -40,7 +41,7 @@ class CampaignNew extends Component{
             const accounts = await web3.eth.getAccounts();
             // now here we can create a campaign by using the createCampaign function in our campaign factory contract
             // we are sending a transaction in here
-            await factory.methods.createCampaign(this.state.minimumContribution)
+            await factory.methods.createCampaign(this.state.minimumContribution, this.state.title)
             .send({
                 from:accounts[0]
             });
@@ -60,7 +61,7 @@ class CampaignNew extends Component{
     render() {
         return (
             <Layout>
-
+                {this.state.minimumContribution} {this.state.title}
                 <h3>Create A Campaign</h3>
 
                 {/* This form is again taken from the semantic ui docs */}
@@ -86,6 +87,23 @@ class CampaignNew extends Component{
                             //event.target.value
                             value = {this.state.minimumContribution}
                             onChange={event=>this.setState({minimumContribution: event.target.value})}
+                        />   
+
+                    </Form.Field>
+                    <Form.Field>
+                        <label>Title</label>
+
+                        {/* This input is taken from semantic use see the docs for code */}
+                        <Input
+                            label="Text"
+                            labelPosition='right'
+                            placeholder='Enter title'
+
+                            // this value is been attatched with the state minimum contribution as this will help 
+                            //render our page whenever the value is changes the minimumContribution gets the value of 
+                            //event.target.value
+                            value = {this.state.title}
+                            onChange={event=>this.setState({title: event.target.value})}
                         />   
 
                     </Form.Field>

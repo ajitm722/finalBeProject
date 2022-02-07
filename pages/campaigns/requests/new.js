@@ -10,6 +10,7 @@ class RequestNew extends Component{
     state={
         value:'',
         description:'',
+        newsTitle:'',
         recipient:'',
         loading:false,
         errorMessage:''
@@ -27,11 +28,11 @@ class RequestNew extends Component{
         this.setState({loading:true, errorMessage:''});
 
         const campaign = Campaign(this.props.address);
-        const { description, value, recipient } = this.state;
+        const {newsTitle, description, value, recipient } = this.state;
 
         try {
             const accounts = await web3.eth.getAccounts();
-            await campaign.methods.createRequest(description, web3.utils.toWei(value, 'ether'), recipient)
+            await campaign.methods.createRequest(newsTitle, description, web3.utils.toWei(value, 'ether'), recipient)
             .send({
                 from: accounts[0]
             });
@@ -62,6 +63,13 @@ class RequestNew extends Component{
                 <h3>Create a Request</h3>
 
                 <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+                    <Form.Field>
+                            <label>News Title</label>
+                            <Input 
+                                value ={this.state.newsTitle}
+                                onChange={ event=>this.setState({ newsTitle:event.target.value }) }
+                            />
+                    </Form.Field>
                     <Form.Field>
                         <label>Description</label>
                         <Input 

@@ -3,13 +3,22 @@ import factory from '../ethereum/factory';
 import { Card, Button } from 'semantic-ui-react';
 import Layout from '../components/Layout';
 import { Link } from '../routes';
+import Campaign from '../ethereum/campaign';
 
 class CampaignIndex extends React.Component{
     
     static async getInitialProps(){
         const campaigns = await factory.methods.getDeployedCampaigns().call();
+        // console.log(campaigns);
+        var title=[];
 
-        return { campaigns };
+        const promises = campaigns.map(async campaign=>{
+            const camp = Campaign(campaign);
+            const summ = await camp.methods.orgName().call();
+            return summ;
+        })
+        title = await Promise.all(promises)
+        return { campaigns, title };
     }
     // this method only executes on the browser but if some one doesnt have metamask installed on their device 
     // we can use our server to get the data from contract this componentDiMOunt method is used to do the initial stuff so 
@@ -25,13 +34,22 @@ class CampaignIndex extends React.Component{
     // the below code for the card is taken from the semantic-ui docs they have good docs have a look
     //address here is nothing but the place where that address is placed.
     renderCampaigns(){
-        const items = this.props.campaigns.map(address =>{
-            return{
-                header: address,
-                description: <Link route={`/campaigns/${address}`}><a>View Organization</a></Link>,
+        var items=[];
+        for(var i=0; i<this.props.title.length; i++){
+            items.push({
+                header: this.props.title[i],
+                description: <Link route={`/campaigns/${this.props.campaigns[i]}`}><a>View Organization</a></Link>,
                 fluid: true
-            };
-        });
+            });
+        }
+        console.log(items);
+        // const items = this.props.campaigns.map(address =>{
+        //     return{
+        //         header: address,
+        //         description: <Link route={`/campaigns/${address}`}><a>View Organization</a></Link>,
+        //         fluid: true
+        //     };
+        // });
 
         return <Card.Group items={items} />;
     }

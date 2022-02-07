@@ -5,10 +5,10 @@ contract CampaignFactory{
     address[] public deployedContracts;
     mapping(address=>bool) public isUserExsits;
 
-    function createCampaign(uint minimum) public{
+    function createCampaign(uint minimum, string orgName) public{
         require(!isUserExsits[msg.sender]);
         isUserExsits[msg.sender] = true;
-        address newCampaign = new Campaign(minimum, msg.sender);
+        address newCampaign = new Campaign(minimum, msg.sender, orgName);
         deployedContracts.push(newCampaign);
     }
     
@@ -21,6 +21,7 @@ contract CampaignFactory{
 contract Campaign{
     
     struct Request{
+        string newsTitle;
         string description;
         uint value;
         address recipient;
@@ -38,16 +39,18 @@ contract Campaign{
     Request[] public requests;
     mapping(address=>bool) public approvers;
     uint public approversCount;
-    uint public reputationScore = 0;
+    int public reputationScore;
+    string public orgName="";
 
     modifier restricted(){
         require(msg.sender == manager);
         _;
     }
     
-    constructor(uint minimum, address creater) public{
+    constructor(uint minimum, address creater, string title) public{
         manager = creater;
         minimumContribution = minimum;
+        orgName = title;
     }
     
     //send money to contract
@@ -61,9 +64,10 @@ contract Campaign{
         }
     }
     
-    function createRequest(string description, uint value, address recipient) public restricted {
+    function createRequest(string title, string description, uint value, address recipient) public restricted {
         //specifiying memory creates  a new instance in the memory
         Request memory newRequest = Request({
+           newsTitle: title,
            description: description,
            value: value,
            recipient: recipient,
@@ -122,13 +126,13 @@ contract Campaign{
         }
     }
 
-    function finalizeRequest(uint index) public restricted{
+    // function finalizeRequest(uint index) public restricted{
         
-        Request storage temp = requests[index];
-        require(temp.trueValue==1);        
-        temp.recipient.transfer(temp.value);
-        temp.complete = true;
-    }
+    //     Request storage temp = requests[index];
+    //     require(temp.trueValue==1);        
+    //     temp.recipient.transfer(temp.value);
+    //     temp.complete = true;
+    // }
     
    function getSummary() public view returns ( uint, uint, uint, uint, address){
         return(
