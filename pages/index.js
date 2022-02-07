@@ -4,21 +4,70 @@ import { Card, Button } from 'semantic-ui-react';
 import Layout from '../components/Layout';
 import { Link } from '../routes';
 import Campaign from '../ethereum/campaign';
-
+import CampaignModel from '../model/CampaignModel';
 class CampaignIndex extends React.Component{
     
     static async getInitialProps(){
         const campaigns = await factory.methods.getDeployedCampaigns().call();
         // console.log(campaigns);
         var title=[];
+        var reputationScore=[];
 
-        const promises = campaigns.map(async campaign=>{
-            const camp = Campaign(campaign);
-            const summ = await camp.methods.orgName().call();
-            return summ;
+        var campaignObject=[];
+        campaignObject = campaigns.map(address=>{
+            return new CampaignModel(address);
+        });
+
+        // console.log(campaignObject);
+
+        const promisesObjs = campaignObject.map(async obj=>{
+            const tempObj = await obj.initilize();
+            return tempObj;
         })
-        title = await Promise.all(promises)
-        return { campaigns, title };
+        await Promise.all(promisesObjs);
+
+        campaignObject.sort((a,b)=>{
+            if(a.reputationScore<b.reputationScore){
+                return 1;
+            }
+            else if(a.reputationScore>b.reputationScore){
+                return -1;
+            }
+            return 0;
+        })
+
+
+        // console.log("objects")
+        // console.log(campaignObject);
+        // console.log("objects")
+
+        // const promises = campaigns.map(async campaign=>{
+        //     const camp = Campaign(campaign);
+        //     const summ = await camp.methods.orgName().call();
+        //     return summ;
+        // })
+        // title = await Promise.all(promises)
+
+        // const promisesRS = campaigns.map(async campaign=>{
+        //     const camp = Campaign(campaign);
+        //     const rs = await camp.methods.reputationScore().call();
+        //     return rs;
+        // })
+        // reputationScore = await Promise.all(promisesRS);
+
+        // const titleRs = [];
+        // for(var i=0; i<reputationScore.length; i++){
+        //     titleRs.push({title: title[i], reputationScore: reputationScore[i]});
+        // }
+
+        // titleRs.sort((a, b)=>{
+        //     return b.reputationScore-a.reputationScore;
+        // })
+
+        
+
+        return { campaignObject };
+        // return {campaignObjects};
     }
     // this method only executes on the browser but if some one doesnt have metamask installed on their device 
     // we can use our server to get the data from contract this componentDiMOunt method is used to do the initial stuff so 
@@ -35,14 +84,14 @@ class CampaignIndex extends React.Component{
     //address here is nothing but the place where that address is placed.
     renderCampaigns(){
         var items=[];
-        for(var i=0; i<this.props.title.length; i++){
+        for(var i=0; i<this.props.campaignObject.length; i++){
             items.push({
-                header: this.props.title[i],
-                description: <Link route={`/campaigns/${this.props.campaigns[i]}`}><a>View Organization</a></Link>,
+                header: this.props.campaignObject[i].orgName,
+                description: <Link route={`/campaigns/${this.props.campaignObject[i].address}`}><a>View Organization</a></Link>,
                 fluid: true
             });
         }
-        console.log(items);
+        // console.log(items);
         // const items = this.props.campaigns.map(address =>{
         //     return{
         //         header: address,
