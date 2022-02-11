@@ -16,6 +16,10 @@ import web3 from '../../ethereum/web3';
 
 import { Router } from '../../routes';
 
+import {loadDB} from '../../firebase/firebase';
+import { collection } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
 class CampaignNew extends Component{
 
     //this state is defined when we created form
@@ -26,9 +30,10 @@ class CampaignNew extends Component{
         errorMessage:'',
         // this is used to show the user that the transaction is processing 
         loading: false,
-        title: ""
+        title: "",
+        orgImg: "",
+        orgImgUrl: ""
     };
-
     //this onSubmit is used when the form will be submitted
     onSubmit = async (event) => {
         event.preventDefault();
@@ -37,15 +42,38 @@ class CampaignNew extends Component{
 
             //turn on the spinner to show we are performing the transactions
             this.setState({loading: true, errorMessage: ''});
-
             const accounts = await web3.eth.getAccounts();
+            console.log(accounts[0]);
+            if(this.state.orgImg===''){
+                console.error(`not an image, the image file is a ${typeof(this.state.orgImg)}`)
+            }
+            console.log("came till here")
+            
+            //upload image to firebase storage then get the url then add this to firestore organization collections
+            const storage = await loadDB();
+            console.log("now upload will start")
+            const reference = ref(storage, `/images/${accounts[0]}`);
+
+            const uploadTask = uploadBytesResumable(reference, this.state.orgImg);
+            uploadTask.on('state_changed',
+            (snapshot)=>{
+                console.log(snapshot)
+            }, (err)=>{
+                console.log("while uploading"+err)
+            }, ()=>{
+                getDownloadURL(uploadTask.snapshot.ref)
+                .then(fireBaseUrl => {
+                    console.log(fireBaseUrl)
+                    this.setState({orgImgUrl: fireBaseUrl})
+                })
+            });
+            console.log("orgImgUrl is: "+this.state.orgImgUrl);
             // now here we can create a campaign by using the createCampaign function in our campaign factory contract
             // we are sending a transaction in here
             await factory.methods.createCampaign(this.state.minimumContribution, this.state.title)
             .send({
                 from:accounts[0]
             });
-
             //immediately after we sucessfully created the campaign we want o redirect to root 
             Router.pushRoute('/');
 
@@ -55,13 +83,19 @@ class CampaignNew extends Component{
             this.setState({errorMessage: error.message});
         }
 
+
+            
+
+            
+
         this.setState({loading: false});
     }
 
     render() {
         return (
             <Layout>
-                {this.state.minimumContribution} {this.state.title}
+
+                {this.state.minimumContribution} {this.state.title} 
                 <h3>Create A Campaign</h3>
 
                 {/* This form is again taken from the semantic ui docs */}
@@ -107,7 +141,22 @@ class CampaignNew extends Component{
                         />   
 
                     </Form.Field>
-                    
+                    <Form.Field>
+                        <label>Title</label>
+
+                        {/* This input is taken from semantic use see the docs for code */}
+                        <Input
+                            label="Text"
+                            labelPosition='right'
+                            placeholder='add file'
+                            type='file'
+                            // this value is been attatched with the state minimum contribution as this will help 
+                            //render our page whenever the value is changes the minimumContribution gets the value of 
+                            //event.target.value
+                            onChange={event=>this.setState({orgImg: event.target.files[0]})}
+                        />   
+
+                    </Form.Field>
 
                     {/* incase any error occurs with the form submittion we can show the error */}
                     {/* this Message component is taken from the semantic ui */}
