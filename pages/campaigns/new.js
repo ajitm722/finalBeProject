@@ -50,9 +50,9 @@ class CampaignNew extends Component{
             console.log("came till here")
             
             //upload image to firebase storage then get the url then add this to firestore organization collections
-            const storage = await loadDB();
+            const storageAndFirestore = await loadDB();
             console.log("now upload will start")
-            const reference = ref(storage, `/images/${accounts[0]}`);
+            const reference = ref(storageAndFirestore.storage, `/images/${accounts[0]}`);
 
             const uploadTask = uploadBytesResumable(reference, this.state.orgImg);
             uploadTask.on('state_changed',

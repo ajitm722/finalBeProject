@@ -64,7 +64,7 @@ contract Campaign{
         }
     }
     
-    function createRequest(string title, string description, uint value, address recipient) public restricted {
+    function createRequest(string title, string description, uint value, address recipient) public restricted{
         //specifiying memory creates  a new instance in the memory
         Request memory newRequest = Request({
            newsTitle: title,
@@ -81,6 +81,10 @@ contract Campaign{
         requests.push(newRequest);
     }
     
+    function requestArrayLength()  public view returns(uint){
+        return requests.length-1;
+    }
+
     function approveRequest(uint index) public {
         Request storage temp = requests[index];
         

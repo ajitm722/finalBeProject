@@ -4,6 +4,8 @@ import Campaign from "../../../ethereum/campaign";
 import web3 from "../../../ethereum/web3";
 import { Link, Router } from '../../../routes';
 import Layout from "../../../components/Layout";
+import {loadDB} from "../../../firebase/firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 class RequestNew extends Component{
 
@@ -32,11 +34,32 @@ class RequestNew extends Component{
 
         try {
             const accounts = await web3.eth.getAccounts();
-            await campaign.methods.createRequest(newsTitle, description, web3.utils.toWei(value, 'ether'), recipient)
+            const response = await campaign.methods.createRequest(newsTitle, description, web3.utils.toWei(value, 'ether'), recipient)
             .send({
                 from: accounts[0]
             });
-            
+            const lastIdx = await campaign.methods.requestArrayLength().call();
+
+            //put this news into recentpost collection
+            //recentpost collection contains data, this.props.address which is org address and news index which is 
+            //inside response 
+            console.log("yo yo response is");
+            console.log(response);
+            console.log("last index is", lastIdx);
+
+            const storageAndFirestore = await loadDB();
+            const collectionRef = collection(storageAndFirestore.firestore, "recentNews");
+            const docRef = await addDoc(collectionRef, 
+                {
+                    timestamp: serverTimestamp(), 
+                    orgAddress: this.props.address,
+                    newsIdx: lastIdx
+                }
+            );
+
+            alert(`news with id ${docRef.id} is added Successfully`);
+
+
             // navigate back to the request lists
             Router.pushRoute(`/campaigns/${this.props.address}/requests`);
             

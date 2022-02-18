@@ -22,8 +22,8 @@ export default class CampaignModel{
         this.approversCount = await this.campaignObj.methods.approversCount().call();
         this.reputationScore = await this.campaignObj.methods.reputationScore().call();
         this.orgName = await this.campaignObj.methods.orgName().call();
-        const storage = await loadDB();
-        const starsRef = ref(storage, `images/${this.manager}`);
+        const storageAndFirestore = await loadDB();
+        const starsRef = ref(storageAndFirestore.storage, `images/${this.manager}`);
         getDownloadURL(starsRef)
         .then((url)=>{
             console.log("image url from model "+ url);

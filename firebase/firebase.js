@@ -21,6 +21,6 @@ const loadDB = async() =>{
       const app = initializeApp(firebaseConfig);
       const firestore = getFirestore();
       const storage = getStorage();
-      return storage;
+      return {storage, firestore};
 }
 export {loadDB}

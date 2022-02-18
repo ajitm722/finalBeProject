@@ -24,7 +24,11 @@ const abi = JSON.parse(CampaignFactory.interface);
 
 // const address = "0x9532cB15b33DD254479905Ec4a97CF276bF1D699"
 
-const address = "0xC853f412F3Ae55E541CAa8E2Fb734380791aD80d"
+// const address = "0xC853f412F3Ae55E541CAa8E2Fb734380791aD80d"
+
+// const address = "0xbee85921fbfE052e5bA2B26f090B70A2FA748458"
+
+const address = "0xCE68F73007a04F0BC26F8a065678ABEa07Abf88b"
 const contractInstance = new web3.eth.Contract(abi, address);
 
 export default contractInstance;

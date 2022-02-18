@@ -5,6 +5,9 @@ import Layout from '../components/Layout';
 import { Link } from '../routes';
 import Campaign from '../ethereum/campaign';
 import CampaignModel from '../model/CampaignModel';
+import RecentNews from '../components/RecentNews';
+import { collection, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { loadDB } from '../firebase/firebase';
 class CampaignIndex extends React.Component{
     
     static async getInitialProps(){
@@ -36,7 +39,16 @@ class CampaignIndex extends React.Component{
             return 0;
         })
 
-
+        const storageAndFirestore = await loadDB();
+        console.log("connecting to firestore");
+        const collectionRef = collection(storageAndFirestore.firestore, "recentNews");
+        const q = query(collectionRef);
+        const querySnapshot = await getDocs(q);
+        const recentNews=[];
+        querySnapshot.forEach((doc)=>{
+            recentNews.push({...doc.data()});
+        })
+        console.log(recentNews)
         // console.log("objects")
         // console.log(campaignObject);
         // console.log("objects")
@@ -66,7 +78,7 @@ class CampaignIndex extends React.Component{
 
         
 
-        return { campaignObject };
+        return { campaignObject, recentNews };
         // return {campaignObjects};
     }
     // this method only executes on the browser but if some one doesnt have metamask installed on their device 
@@ -136,6 +148,7 @@ class CampaignIndex extends React.Component{
                     {this.renderCampaigns()}
 
 
+                    <RecentNews />
                 </div>
 
             </Layout>
